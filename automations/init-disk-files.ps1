@@ -2,27 +2,26 @@
     $myFolder
 )
 
-
+# Paths for recursive reads
 $rootPath = "C:"
-$rootpath
 $rootPathWin = "C:\Windows"
-$rootPathWin
 $rootPathPF = "c:\Progra~1"
-$rootPathPF
 $rootPathPF86 = "c:\Progra~2"
-$rootPathPF86
+$mainAppPath = "c:\eclipse"
 
+## Get script Name
+$scriptName = $MyInvocation.MyCommand.Name
 
-
+# Log event info 
 $eventLogName = "Application"
 $source = "Disk Hydration"
 $eventId = 42001
 $entryType = "Information"
-$message = "42001 disk hydration begins."
-$messageend = "42999 disk hydration ends."
+$message = "42001 disk hydration begins.  ver.20230524-2223-28 includes apppath"
+$messageend = "42999 disk hydration ends. ver.20230524-2223-28 includes apppath"
 
 
-function Create-Event {
+function Write-Event {
     param (
         [Parameter(Mandatory=$true)]
         [string]$LogSourceName,
@@ -87,16 +86,6 @@ function Get-NumofProcesses {
 }
 
 
-
-
-## Get script Name
-$scriptLocation = $MyInvocation.MyCommand.Name
-$scriptLocation
-$scriptName = Split-Path -Path $scriptLocation -Leaf
-$scriptName
-
-
-
 if (-not $myFolder) {
     $myFolder = "C:"
 
@@ -110,23 +99,26 @@ if (-not $myFolder) {
 
     
     $loc1 = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($rootPath)`""
-    "$($loc1)"
+    #"$($loc1)"
     Start-Process -Filepath powershell.exe -ArgumentList $($loc1)
 
 
     $loc2 = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($rootPathWin)`""
-    "$($loc2)"
+    #"$($loc2)"
     Start-Process -Filepath powershell.exe -ArgumentList $($loc2)
 
     
     $loc3 = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"`"$($rootPathPF)`"`""
-    "$($loc3)"
+    #"$($loc3)"
     Start-Process -Filepath powershell.exe -ArgumentList $($loc3)
 
     $loc4 = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($rootPathPF86)`""
-    #$loc4 = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder $($env:ProgramFiles(x86))"
-    "$($loc4)"
+    #"$($loc4)"
     Start-Process -Filepath powershell.exe -ArgumentList $($loc4)
+
+    $loc5 = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($mainAppPath)`""
+    #"$($loc5)"
+    Start-Process -Filepath powershell.exe -ArgumentList $($loc5)
 
     
 
@@ -135,13 +127,7 @@ else {
 
     #Start-Process -Filepath powershell.exe -ArgumentList "$($LogSourceName) -myFolder $($myFolder)"
 
-
-
-
-    ## Get script Name
-    $scriptName = $MyInvocation.MyCommand.Name
-
-    Create-Event -LogSourceName $scriptName -EventID 42001 -EventMessage "General script begins now."
+    Write-Event -LogSourceName $scriptName -EventID 42001 -EventMessage "General script begins now. ver.20230524-2011-38 includes apppath."
 
     #test
     Write-Output $myFolder
@@ -178,7 +164,7 @@ else {
     } 
 
 
-    Create-Event -LogSourceName $scriptName -EventID 42555 -EventMessage "General script ends now."
+    Write-Event -LogSourceName $scriptName -EventID 42555 -EventMessage "General script ends now. ver.20230524-2011-38"
 
 }
 
@@ -206,4 +192,4 @@ else {
         $result
     } 
 
-Create-Event -LogSourceName $scriptName -EventID 42999 -EventMessage "post powershell check script ends now."
+Write-Event -LogSourceName $scriptName -EventID 42999 -EventMessage "post powershell check script ends now."
