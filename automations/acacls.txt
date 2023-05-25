@@ -1,0 +1,4 @@
+icacls "C:\Program Files(x86)\*" /grant "NT AUTHORITY\SYSTEM:(R)" /T /C /inheritance:e
+icacls "C:\Program Files(x86)\*" /grant Administrators:(R) /T /C /inheritance:e
+icacls "C:\Program Files\*" /grant Administrators:(R) /T /C /inheritance:e
+icacls "C:\Program Files\*" /grant "NT AUTHORITY\SYSTEM:(R)" /T /C /inheritance:e

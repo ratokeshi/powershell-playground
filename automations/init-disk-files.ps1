@@ -3,11 +3,15 @@
 )
 
 
+$rootPath = "C:"
+$rootpath
+$rootPathWin = "C:\Windows"
+$rootPathWin
+$rootPathPF = "c:\Progra~1"
+$rootPathPF
+$rootPathPF86 = "c:\Progra~2"
+$rootPathPF86
 
-$rootPathWin = "C:\windows"
-$rootPathPF = "C:\Program Files"
-$rootPathPF86 = "C:\Program Files (x86)"
-$rootPath = "C:\"
 
 
 $eventLogName = "Application"
@@ -71,6 +75,17 @@ function Process-FilesRecursively {
     }
 }
 
+function Get-NumofProcesses {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$exename
+    )
+
+    $getnum = (Get-Process | Where-Object {$_.Name -eq ‘powershell'}).count
+    $result = $getnum
+    return $result
+}
+
 
 
 
@@ -83,32 +98,37 @@ $scriptName
 
 
 if (-not $myFolder) {
-    $myFolder = "C:\"
+    $myFolder = "C:"
 
     Start-Process -Filepath powershell.exe -ArgumentList "$($scriptName) -myFolder `"$($rootPath)`""
 
-    #tesst
+    #test
     Write-Output $scriptName
     Write-Output $rootPath
     Write-Output $PSScriptRoot
 
 
-   Start-Process -Filepath powershell.exe -ArgumentList "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($rootPath)`\`""
-   $testpath = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($rootPath)`\`""
-   $testpath
+    
+    $loc1 = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($rootPath)`""
+    "$($loc1)"
+    Start-Process -Filepath powershell.exe -ArgumentList $($loc1)
 
 
-    Start-Process -Filepath powershell.exe -ArgumentList "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($rootPathWin)`""
-    $loc = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($rootPathWin)`""
-    $loc
+    $loc2 = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($rootPathWin)`""
+    "$($loc2)"
+    Start-Process -Filepath powershell.exe -ArgumentList $($loc2)
 
-    Start-Process -Filepath powershell.exe -ArgumentList "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName)  `"$($rootPathPF)`\`""
-    $loc = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($rootPathPF)`\`""
-    $loc
+    
+    $loc3 = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"`"$($rootPathPF)`"`""
+    "$($loc3)"
+    Start-Process -Filepath powershell.exe -ArgumentList $($loc3)
 
-    Start-Process -Filepath powershell.exe -ArgumentList "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) `"$($rootPathPF86)`\`""
-    $loc = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) `"$($rootPathPF86)`\`""
-    $loc
+    $loc4 = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder `"$($rootPathPF86)`""
+    #$loc4 = "$($env:SystemRoot)\system32\WindowsPowerShell\v1.0\powershell.exe $($PSScriptRoot)\$($scriptName) -myFolder $($env:ProgramFiles(x86))"
+    "$($loc4)"
+    Start-Process -Filepath powershell.exe -ArgumentList $($loc4)
+
+    
 
 }
 else {
@@ -133,7 +153,57 @@ else {
     Process-FilesRecursively -Path "c:\Program Files"
 
 
+    # Loop to find number of powershell running
 
-    Create-Event -LogSourceName $scriptName -EventID 42999 -EventMessage "General script ends now."
+    Start-Sleep -Seconds 5
+    $numofdd = Get-NumofProcesses -exename "powershell"
+    Write-Output "number of dd running is: $($numofdd)"
+
+    Start-Sleep -Seconds 5
+    $numofdd = Get-NumofProcesses -exename "powershell"
+    Write-Output "number of dd running is: $($numofdd)"
+
+    Start-Sleep -Seconds 5
+    $numofdd = Get-NumofProcesses -exename "powershell"
+    Write-Output "number of dd running is: $($numofdd)"
+
+
+
+    while ($numofdd -gt 1) {
+
+        Start-Sleep -Seconds 3
+        $result= Get-NumofProcesses -exename "powershell"
+        $numofdd = $result
+        $result
+    } 
+
+
+    Create-Event -LogSourceName $scriptName -EventID 42555 -EventMessage "General script ends now."
 
 }
+
+    # Loop to find number of powershell running
+
+    Start-Sleep -Seconds 5
+    $numofdd = Get-NumofProcesses -exename "powershell"
+    Write-Output "number of dd running is: $($numofdd)"
+
+    Start-Sleep -Seconds 5
+    $numofdd = Get-NumofProcesses -exename "powershell"
+    Write-Output "number of dd running is: $($numofdd)"
+
+    Start-Sleep -Seconds 5
+    $numofdd = Get-NumofProcesses -exename "powershell"
+    Write-Output "number of dd running is: $($numofdd)"
+
+
+
+    while ($numofdd -gt 1 ) {
+
+        Start-Sleep -Seconds 3
+        $result= Get-NumofProcesses -exename "powershell"
+        $numofdd = $result
+        $result
+    } 
+
+Create-Event -LogSourceName $scriptName -EventID 42999 -EventMessage "post powershell check script ends now."
